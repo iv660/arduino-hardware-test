@@ -24,14 +24,42 @@ void JoystickGauge::drawScope(int centerX, int centerY)
 void JoystickGauge::drawPointer(int pointerX, int pointerY)
 {
     screen->drawPixel(x + pointerX, y + pointerY, color);
+    pointerPosition.x = pointerX;
+    pointerPosition.y = pointerY;
+    pointerIsVisible = true;
+}
+
+void JoystickGauge::updatePointer(int pointerX, int pointerY)
+{
+    if (pointerIsVisible) {
+        removeVisiblePointer();
+    }
+
+    drawPointer(pointerX, pointerY);
+}
+
+void JoystickGauge::removeVisiblePointer()
+{
+    screen->drawPixel(x + pointerPosition.x, y + pointerPosition.y, 0);
+    pointerIsVisible = false;
+}
+
+bool JoystickGauge::pointerPositionHasChanged(int pointerX, int pointerY)
+{
+    if (pointerX != pointerPosition.x) {
+        return true;
+    }
+
+    if (pointerY != pointerPosition.y) {
+        return true;
+    }
+
+    return false;
 }
 
 void JoystickGauge::displayReadouts(int xReadout, int yReadout)
 {
-    screen->textSize(1);
-    screen->stroke(0xFF, 0xFF, 0xFF);
-    screen->text((String(toFormat("%d, ", xReadout)) + String(toFormat("%d", yReadout))).c_str(), 0, 12);
-    screen->text((String(toFormat("%d, ", analogRead(vrxPin))) + String(toFormat("%d", analogRead(vryPin)))).c_str(), 0, 0);
+    // Do not display readouts
 }
 
 long JoystickGauge::readoutToRelativePosition(long readout)
@@ -50,6 +78,17 @@ char *JoystickGauge::toFormat(char *format, long number)
     return buffer;
 }
 
+void JoystickGauge::message(char * text)
+{
+    screen->textSize(1);
+    screen->fill(0, 0, 0);
+    screen->stroke(0, 0, 0);
+    screen->rect(0, 0, screen->width(), 8);
+
+    screen->stroke(0xFF, 0xFF, 0xFF);
+    screen->text(text, 0, 0);
+}
+
 void JoystickGauge::begin()
 {
     pinMode(vrxPin, INPUT);
@@ -60,8 +99,12 @@ void JoystickGauge::update()
 {
     long xReadout = readX();
     long yReadout = readY();
+
+    if (!pointerPositionHasChanged(xReadout, yReadout)) {
+        return;
+    }
     
     drawScope(x, y);
-    drawPointer(xReadout, yReadout);
+    updatePointer(xReadout, yReadout);
     displayReadouts(xReadout, yReadout);
 }
