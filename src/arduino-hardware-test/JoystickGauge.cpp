@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <stdio.h>
 #include "JoystickGauge.h"
+#include "Crosshair.h"
 
 long JoystickGauge::readX()
 {
@@ -23,7 +24,9 @@ void JoystickGauge::drawScope(int centerX, int centerY)
 
 void JoystickGauge::drawPointer(int pointerX, int pointerY)
 {
-    screen->drawPixel(x + pointerX, y + pointerY, color);
+    Crosshair(x + pointerX, y + pointerY)
+        .renderOn(screen);
+
     pointerPosition.x = pointerX;
     pointerPosition.y = pointerY;
     pointerIsVisible = true;
@@ -40,7 +43,8 @@ void JoystickGauge::updatePointer(int pointerX, int pointerY)
 
 void JoystickGauge::removeVisiblePointer()
 {
-    screen->drawPixel(x + pointerPosition.x, y + pointerPosition.y, 0);
+    Crosshair(x + pointerPosition.x, y + pointerPosition.y)
+        .removeFrom(screen);
     pointerIsVisible = false;
 }
 
