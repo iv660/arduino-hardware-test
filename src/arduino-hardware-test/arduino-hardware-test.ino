@@ -3,6 +3,7 @@
 #include <TFTScreen.h>
 
 #include "JoystickGauge.h"
+#include "MomentarySwitchDisplay.h"
 
 #define CS_PIN 10 // пин для подключения CS
 #define DC_PIN 8  // пин для подключения A0
@@ -19,6 +20,7 @@ Appliance appliance;
 TFTScreen screen(CS_PIN, DC_PIN, RST_PIN);
 
 JoystickGauge joystickGauge(80, 64, VRX_PIN, VRY_PIN, &screen);
+MomentarySwitchDisplay buttonA(10, 110, PIN5, 'A', &screen);
 
 // Serial.begin(115200);
 
@@ -35,9 +37,11 @@ void setup()
     appliance.screen->text("Joystick Gauge", 0, 0);
     
     joystickGauge.begin();
+    buttonA.begin();
 }
 
 void loop() 
 {
     joystickGauge.update();
+    buttonA.update();
 }
