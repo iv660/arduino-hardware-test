@@ -20,9 +20,24 @@ Appliance appliance;
 TFTScreen screen(CS_PIN, DC_PIN, RST_PIN);
 
 JoystickGauge joystickGauge(80, 64, VRX_PIN, VRY_PIN, &screen);
+MomentarySwitchDisplay joystickButton(80, 64, PIN2, 'J', &screen);
+MomentarySwitchDisplay pauseButton(120, 20, PIN3, 'P', &screen);
+MomentarySwitchDisplay startButton(150, 20, PIN4, 'S', &screen);
 MomentarySwitchDisplay buttonA(10, 110, PIN5, 'A', &screen);
+MomentarySwitchDisplay buttonB(30, 110, PIN6, 'B', &screen);
+MomentarySwitchDisplay buttonC(50, 110, PIN7, 'C', &screen);
+MomentarySwitchDisplay buttonD(70, 110, 9, 'D', &screen);
 
-GaugeInterface* gauges[] = {&joystickGauge, &buttonA};
+GaugeInterface* gauges[] = {
+    &joystickGauge, 
+    &joystickButton,
+    &pauseButton,
+    &startButton,
+    &buttonA, 
+    &buttonB, 
+    &buttonC, 
+    &buttonD
+};
 
 // Serial.begin(115200);
 
