@@ -22,6 +22,8 @@ TFTScreen screen(CS_PIN, DC_PIN, RST_PIN);
 JoystickGauge joystickGauge(80, 64, VRX_PIN, VRY_PIN, &screen);
 MomentarySwitchDisplay buttonA(10, 110, PIN5, 'A', &screen);
 
+GaugeInterface* gauges[] = {&joystickGauge, &buttonA};
+
 // Serial.begin(115200);
 
 
@@ -36,12 +38,14 @@ void setup()
     appliance.screen->stroke(0xFF, 0xFF, 0xFF);
     appliance.screen->text("Joystick Gauge", 0, 0);
     
-    joystickGauge.begin();
-    buttonA.begin();
+    for (auto& gauge: gauges) {
+        gauge->begin();
+    }
 }
 
 void loop() 
 {
-    joystickGauge.update();
-    buttonA.update();
+    for (auto& gauge: gauges) {
+        gauge->update();
+    }
 }

@@ -1,11 +1,13 @@
 #pragma once
 
 #include <ScreenInterface.h>
+
 #include "JoystickGaugePosition.h"
+#include "GaugeInterface.h"
 
 using XC::Hardware::ScreenInterface;
 
-class JoystickGauge
+class JoystickGauge: public GaugeInterface
 {
     private:
         static const int scopeRadius = 20;
@@ -42,6 +44,6 @@ class JoystickGauge
             x(x), y(y), vrxPin(vrxPin), vryPin(vryPin), 
             screen(screen) {};
 
-        void begin();
-        void update();
+        void begin() override;
+        void update() override;
 };

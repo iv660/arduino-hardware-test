@@ -2,9 +2,11 @@
 
 #include <ScreenInterface.h>
 
+#include "GaugeInterface.h"
+
 using XC::Hardware::ScreenInterface;
 
-class MomentarySwitchDisplay
+class MomentarySwitchDisplay: public GaugeInterface
 {
     private:
         unsigned int x = 0;
@@ -32,6 +34,6 @@ class MomentarySwitchDisplay
             unsigned int pin, char label, ScreenInterface* screen) 
             : x(x), y(y), pin(pin), label(label), screen(screen) {}
 
-        void begin();
-        void update();
+        void begin() override;
+        void update() override;
 };
